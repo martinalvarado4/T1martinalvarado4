@@ -1,0 +1,48 @@
+<h1>Resultado de Busqueda</h1>
+<table style="width:100%">
+  <tr>
+    <td><b>Tipo</b></td>
+    <td><b>Resultado</b></td>
+  </tr>
+  <tr>
+    <td>People</td>
+    <td>
+    {% for key,valor in query.people_res.items %}
+      <a href= "../characters/{{valor}}" >{{key }}</a>
+    {% endfor %}
+    </td>
+  </tr>
+  <tr>
+    <td>Starships</td>
+    <td>
+    {% for key,valor in query.starships_res.items %}
+      <a href= "../starships/{{valor}}" >{{key }}</a>
+    {% endfor %}
+    </td>
+  </tr>
+  <tr>
+    <td>Planets</td>
+    <td>
+    {% for key,valor in query.planets_res.items %}
+      <a href= "../planets/{{valor}}" >{{key }}</a>
+    {% endfor %}
+    </td>
+  </tr>
+  <tr>
+    <td>Films</td>
+    <td>
+    {% for key,valor in query.films_res.items %}
+      <a href= "../films/{{valor}}" >{{key}}</a>
+    {% endfor %}
+    </td>
+  </tr>
+</table>
+<h1>Para volver a la Pagina Principal</h1>
+<form action="../">
+   <button type="submit">INICIO</button>
+</form>
+<h1>Buscador</h1>
+<form id="searchform" action="../result/" method="get">
+    <input type="text" name="q" type="text"/>
+    <button type="button" onclick="searchform.submit()">BUSCAR</button>
+</form>

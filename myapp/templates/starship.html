@@ -1,0 +1,28 @@
+<h1>Datos de la Nave</h1>
+{% for key, value in starship.items %}
+  {% if key == "pilots" %}
+    <p><b> {{key}} :</b>
+    {% for key2,value2 in starship.pilots.items %}
+      <a href= "../characters/{{value2}}" >{{key2}}</a>
+    {% endfor %}
+    </p>
+  {% elif key == "films" %}
+    <p><b> {{key}} :</b>
+    {% for key2,value2 in starship.films.items %}
+      <a href= "../films/{{value2}}" >{{key2}}</a>
+    {% endfor %}
+    </p>
+  {% else %}
+    <p><b>{{key}} :</b> {{value}}</p>
+  {% endif%}
+{% endfor %}
+
+<h1>Para volver a la Pagina Principal</h1>
+<form action="../">
+   <button type="submit">INICIO</button>
+</form>
+<h1>Buscador</h1>
+<form id="searchform" action="../result/" method="get">
+    <input type="text" name="q" type="text"/>
+    <button type="button" onclick="searchform.submit()">BUSCAR</button>
+</form>

@@ -1,0 +1,47 @@
+<h1>Datos del Personaje</h1>
+{% for key, value in character.items %}
+  {% if key == "starships" %}
+    <p> <b>{{key}} : </b>
+    {% for key2,value2 in character.starships.items %}
+      <a href= "../starships/{{value2}}" >{{key2}}</a>
+    {% endfor %}
+    </p>
+  {% elif key == "films" %}
+    <p> <b>{{key}} :</b>
+    {% for key2,value2 in character.films.items %}
+      <a href= "../movies/{{value2}}" >{{key2}}</a>
+    {% endfor %}
+    </p>
+  {% elif key == "homeworld" %}
+    <p><b> {{key}} :</b>
+    {% for key2,value2 in character.homeworld.items %}
+      <a href= "../planets/{{value2}}" >{{key2}}</a>
+    {% endfor %}
+    </p>
+  {% elif key == "species" %}
+    <p> <b>{{key}} :</b>
+    {% for key2,value2 in character.species.items %}
+      {{key2}}
+    {% endfor %}
+    </p>
+  {% elif key == "vehicles" %}
+    <p> <b>{{key}} :</b>
+    {% for key2,value2 in character.vehicles.items %}
+      {{key2}}
+    {% endfor %}
+    </p>
+  {% else %}
+    <p><b>{{key}} :</b> {{value}}</p>
+  {% endif%}
+{% endfor %}
+
+<h1>Para volver a la Pagina Principal</h1>
+<form action="../">
+   <button type="submit">INICIO</button>
+</form>
+
+<h1>Buscador</h1>
+<form id="searchform" action="../result/" method="get">
+    <input type="text" name="q" type="text"/>
+    <button type="button" onclick="searchform.submit()">BUSCAR</button>
+</form>

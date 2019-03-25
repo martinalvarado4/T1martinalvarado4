@@ -1,0 +1,25 @@
+<h1>Todas las Peliculas de Star wars</h1>
+<table style="width:100%">
+  <tr>
+    <th>Nombre</th>
+    <th>Año lanzamiento</th>
+    <th>Director</th>
+    <th>Productor</th>
+    <th>N° Episodio</th>
+  </tr>
+  {% for pelicula in peliculas %}
+    <tr>
+      <td><a href= "movies/{{pelicula.id}}" >{{pelicula.title}}</a></td>
+      <td>{{pelicula.release_date}}</td>
+      <td>{{pelicula.director}}</td>
+      <td>{{pelicula.producer}}</td>
+      <td>{{pelicula.episode_id}}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<h1>Buscador</h1>
+<form id="searchform" action="../result/" method="get">
+    <input type="text" name="q" type="text"/>
+    <button type="button" onclick="searchform.submit()">BUSCAR</button>
+</form>
