@@ -8,90 +8,88 @@ import json
 
 # Create your views here.
 def index(response):
-    url = 'https://swapi.co/api/films'
-    response = requests.get(url)
-    data = response.json()
-    peliculas = {'peliculas':[]}
-    for i in data['results']:
-        id = i['url'].split('/')[-2]
-        peliculas['peliculas'].append({'title':i['title'], 'episode_id':i['episode_id'],
-         'release_date':i['release_date'], 'director':i['director'],
-         'producer':i['producer'], 'id': str(id)})
-    return render_to_response('index.html',peliculas)
+    url = "https://swapi-graphql-integracion-t3.herokuapp.com"
+    query = {"query": "{allFilms { edges { node { id title releaseDate director producers episodeID }}}}"}
+    headers = {'content-type': 'application/json'}
+    response = requests.post(url, data=json.dumps(query), headers=headers)
+    data = response.json()["data"]
+    peliculas = {'peliculas': []}
+    for p in data['allFilms']['edges']:
+        pelicula = p['node']
+        peliculas['peliculas'].append({'title': pelicula['title'], 'episode_id': pelicula['episodeID'],
+                                      'release_date': pelicula['releaseDate'], 'director': pelicula['director'],
+                                      'producer': pelicula['producers'], 'id': pelicula['id']})
+    return render_to_response('index.html', peliculas)
 
-def movie(response,movie):
-    url = 'https://swapi.co/api/films/' + str(movie)
-    response = requests.get(url)
-    data = response.json()
+def movie(response, movie):
+    url = "https://swapi-graphql-integracion-t3.herokuapp.com"
+    query = {"query": "{film(id: \""+movie+"\") {title id episodeID openingCrawl director producers releaseDate characterConnection {characters {name id}}planetConnection{planets{name id}}starshipConnection{starships{name id}}}}"}
+    headers = {'content-type': 'application/json'}
+    response = requests.post(url, data=json.dumps(query), headers=headers)
+    data = response.json()["data"]
     movie = {}
-    for k,v in data.items():
-        if (k == "species" or k == "vehicles" or  k == "url" or
-        k == "edited" or k == "created"):
-            pass
-        elif k == "characters":
-            movie[k] = return_names("characters",data,"name")
-        elif k == "planets":
-            movie[k] = return_names("planets",data,"name")
-        elif k == "starships":
-            movie[k] = return_names("starships",data,"name")
-        else:
-            movie[k] = v
+    movie["title"] = data["film"]["title"]
+    movie["episodeID"] = data["film"]["episodeID"]
+    movie["openingCrawl"] = data["film"]["openingCrawl"]
+    movie["director"] = data["film"]["director"]
+    movie["producers"] = data["film"]["producers"]
+    movie["releaseDate"] = data["film"]["releaseDate"]
+    movie["characters"] = data["film"]["characterConnection"]["characters"]
+    movie["planets"] = data["film"]["planetConnection"]["planets"]
+    movie["starships"] = data["film"]["starshipConnection"]["starships"]
     return render_to_response('movie.html', {"movie": movie})
 
 def character(response, character):
-    url = 'https://swapi.co/api/people/' + str(character)
-    response = requests.get(url)
-    data = response.json()
+    url = "https://swapi-graphql-integracion-t3.herokuapp.com"
+    query = {"query": "{person(id: \""+character+"\"){ name height mass hairColor skinColor eyeColor birthYear gender homeworld {id name}filmConnection{films{title id}}species {id name}vehicleConnection{vehicles{name id}}starshipConnection{starships{name id}}}}"}
+    headers = {'content-type': 'application/json'}
+    response = requests.post(url, data=json.dumps(query), headers=headers)
+    data = response.json()["data"]["person"]
     character = {}
     for k,v in data.items():
-        if (k == "edited" or k == "created" or k == "url"):
-            pass
-        elif k == "starships":
-            character[k] = return_names("starships",data,"name")
-        elif k == "vehicles":
-            character[k] = return_names("vehicles",data,"name")
+        if k == "starshipConnection":
+            character["starships"] = v["starships"]
+        elif k == "vehicleConnection":
+            character["vehicles"] = v["vehicles"]
         elif k == "species":
-            character[k] = return_names("species",data,"name")
+            character[k] = v
         elif k == "homeworld":
-            names = {}
-            response_homeworld = requests.get(v)
-            data_homeworld = response_homeworld.json()
-            names[data_homeworld["name"]] = v.split('/')[-2]
-            character[k] = names
-        elif k == "films":
-            character[k] = return_names("films",data,"title")
+            character[k] = v
+        elif k == "filmConnection":
+            character["films"] = v["films"]
         else:
             character[k] = v
+    print(character)
     return render_to_response('character.html', {"character" : character})
 
 def planet(response, planet):
-    url = 'https://swapi.co/api/planets/' + str(planet)
-    response = requests.get(url)
-    data = response.json()
+    url = "https://swapi-graphql-integracion-t3.herokuapp.com"
+    query = {"query": "{planet(id: \""+ planet +"\"){ name rotationPeriod orbitalPeriod diameter climates gravity terrains surfaceWater population residentConnection{residents{id name}}filmConnection{films{title id}}}}"}
+    headers = {'content-type': 'application/json'}
+    response = requests.post(url, data=json.dumps(query), headers=headers)
+    data = response.json()["data"]["planet"]
     planet = {}
     for k,v in data.items():
-        if (k == "edited" or k == "created" or k == "url"):
-            pass
-        elif k == "residents":
-            planet[k] = return_names("residents",data,"name")
-        elif k == "films":
-            planet[k] = return_names("films",data,"title")
+        if k == "residentConnection":
+            planet["residents"] = v["residents"]
+        elif k == "filmConnection":
+            planet["films"] = v["films"]
         else:
             planet[k] = v
     return render_to_response('planet.html', {"planet" : planet})
 
 def starship(response, starship):
-    url = 'https://swapi.co/api/starships/' + str(starship)
-    response = requests.get(url)
-    data = response.json()
+    url = "https://swapi-graphql-integracion-t3.herokuapp.com"
+    query = {"query": "{ starship(id: \""+starship+"\"){ name model manufacturers costInCredits length maxAtmospheringSpeed crew passengers cargoCapacity consumables hyperdriveRating MGLT starshipClass pilotConnection{pilots{name id}}filmConnection{films{title id}}}}"}
+    headers = {'content-type': 'application/json'}
+    response = requests.post(url, data=json.dumps(query), headers=headers)
+    data = response.json()["data"]["starship"]
     starship = {}
     for k,v in data.items():
-        if (k == "edited" or k == "created" or k == "url"):
-            pass
-        elif k == "pilots":
-            starship[k] = return_names("pilots",data,"name")
-        elif k == "films":
-            starship[k] = return_names("films",data,"title")
+        if k == "pilotConnection":
+            starship["pilots"] = v["pilots"]
+        elif k == "filmConnection":
+            starship["films"] = v["films"]
         else:
             starship[k] = v
     return render_to_response('starship.html', {"starship" : starship})

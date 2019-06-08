@@ -2,14 +2,14 @@
 {% for key, value in planet.items %}
   {% if key == "residents" %}
     <p> <b>{{key}} :</b>
-    {% for key2,value2 in planet.residents.items %}
-      <a href= "../characters/{{value2}}" >{{key2}}</a>
+    {% for k in planet.residents %}
+      <a href= "../characters/{{k.id}}" >{{k.name}}</a>
     {% endfor %}
     </p>
   {% elif key == "films" %}
     <p> <b>{{key}} :</b>
-    {% for key2,value2 in planet.films.items %}
-      <a href= "../movies/{{value2}}" >{{key2}}</a>
+    {% for k in planet.films %}
+      <a href= "../movies/{{k.id}}" >{{k.title}}</a>
     {% endfor %}
     </p>
   {% else %}

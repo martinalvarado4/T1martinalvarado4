@@ -2,20 +2,20 @@
 {% for key,value in movie.items %}
   {% if key == "characters" %}
     <p><b> {{key}}</b>
-    {% for key2,value2 in movie.characters.items %}
-      <a href= "../characters/{{value2}}" >{{key2}}</a>
+    {% for k in movie.characters %}
+      <a href= "../characters/{{k.id}}" >{{k.name}}</a>
     {% endfor %}
     </p>
   {% elif key == "planets" %}
     <p> <b>{{key}}</b>
-    {% for key2,value2 in movie.planets.items %}
-      <a href= "../planets/{{value2}}" >{{key2}}</a>
+    {% for k in movie.planets %}
+      <a href= "../planets/{{k.id}}" >{{k.name}}</a>
     {% endfor %}
     </p>
   {% elif key == "starships" %}
     <p><b> {{key}}</b>
-    {% for key2,value2 in movie.starships.items %}
-      <a href= "../starships/{{value2}}" >{{key2}}</a>
+    {% for k in movie.starships %}
+      <a href= "../starships/{{k.id}}" >{{k.name}}</a>
     {% endfor %}
     </p>
   {% elif key == "title" %}
