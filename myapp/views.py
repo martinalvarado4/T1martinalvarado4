@@ -41,7 +41,7 @@ def movie(response, movie):
 
 def character(response, character):
     url = "https://swapi-graphql-integracion-t3.herokuapp.com"
-    query = {"query": "{person(id: \""+character+"\"){ name height mass hairColor skinColor eyeColor birthYear gender homeworld {id name}filmConnection{films{title id}}species {id name}vehicleConnection{vehicles{name id}}starshipConnection{starships{name id}}}}"}
+    query = {"query": "{person(id: \""+character+"\"){ name height mass hairColor skinColor eyeColor birthYear gender homeworld {id name}filmConnection{films{title id}} starshipConnection{starships{name id}}}}"}
     headers = {'content-type': 'application/json'}
     response = requests.post(url, data=json.dumps(query), headers=headers)
     data = response.json()["data"]["person"]
